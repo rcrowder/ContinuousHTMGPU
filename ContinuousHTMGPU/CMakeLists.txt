@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(CHTMGPU)
+project(CHTMGPU CXX)
 
 include_directories("${PROJECT_SOURCE_DIR}/source")
 
 # This is only required for the script to work in the version control
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
  
+find_package(OpenGL REQUIRED)
 find_package(OpenCL REQUIRED)
  
 include_directories(${OPENCL_INCLUDE_DIRS})
@@ -17,11 +18,16 @@ else(OPENCL_HAS_CPP_BINDINGS)
     message("No OpenCL CPP bindings found")
 endif(OPENCL_HAS_CPP_BINDINGS)
 
-find_package(SFML 2 REQUIRED system window graphics)
+find_package(SFML 2 REQUIRED system window graphics main)
  
 include_directories(${SFML_INCLUDE_DIR})
  
 add_executable(CHTMGPU "${PROJECT_SOURCE_DIR}/source/Main.cpp")
 
+target_link_libraries(CHTMGPU opengl32)
+target_link_libraries(CHTMGPU winmm)
 target_link_libraries(CHTMGPU ${OPENCL_LIBRARIES})
+target_link_libraries(CHTMGPU ${SFML_ROOT}/lib/glew)
+target_link_libraries(CHTMGPU ${SFML_ROOT}/lib/jpeg)
+target_link_libraries(CHTMGPU ${SFML_ROOT}/lib/freetype)
 target_link_libraries(CHTMGPU ${SFML_LIBRARIES})
